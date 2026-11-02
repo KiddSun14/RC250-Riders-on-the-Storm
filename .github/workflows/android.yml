@@ -1,5 +1,5 @@
 
-name: RC250 - Generar APK
+name: RC250 STORM V05 - APK
 
 on:
   push:
@@ -9,6 +9,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: RC250_STORM_V05_GITHUB
 
     steps:
       - name: Descargar proyecto
@@ -20,24 +24,28 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Configurar Android SDK
-        run: |
-          echo "ANDROID_HOME=$ANDROID_SDK_ROOT" >> "$GITHUB_ENV"
-          yes | "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" --licenses || true
-  
+      - name: Configurar Android
+        uses: android-actions/setup-android@v3
 
-      - name: Instalar Gradle
+      - name: Instalar SDK
+        run: sdkmanager "platforms;android-35" "build-tools;35.0.0"
+
+      - name: Configurar Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
-          gradle-version: '8.13'
+          gradle-version: '8.9'
 
-      - name: Compilar APK
-        working-directory: 'RC250_Rider 4'
-        run: gradle assembleDebug --stacktrace
+      - name: Verificar tablero STORM
+        run: |
+          test -f app/src/main/assets/dashboard.jpg
+          test -f app/src/main/assets/index.html
+          grep -q 'stormv5' app/build.gradle.kts
+
+      - name: Compilar RC250 STORM V05
+        run: gradle :app:assembleDebug --no-daemon
 
       - name: Guardar APK
         uses: actions/upload-artifact@v4
         with:
-          name: RC250-Riders-on-the-Storm-APK
-          path: 'RC250_Rider 4/app/build/outputs/apk/debug/*.apk'
-          if-no-files-found: error
+          name: RC250-STORM-V05-APK
+          path: RC250_STORM_V05_GITHUB/app/build/outputs/apk/debug/app-debug.apk
