@@ -1,0 +1,9 @@
+RC250 Riders on the Storm - APK via GitHub Actions
+
+1. Crea un repositorio nuevo en github.com.
+2. Sube EL CONTENIDO de la carpeta RC250_Rider a la raiz del repositorio (incluida .github).
+3. Abre Actions > Compilar APK RC250 > Run workflow.
+4. Al finalizar, descarga el artifact RC250-Riders-on-the-Storm-APK.
+5. Descomprime el artifact y pasa app-debug.apk al Redmi para instalarlo.
+
+Esta es una version base: velocimetro GPS, accesos a Maps y musica y controles de sesion multimedia. No incorpora aun el mockup cinematografico ni mapa embebido.
