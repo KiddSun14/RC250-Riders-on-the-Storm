@@ -25,6 +25,11 @@ import java.util.Locale
 class MainActivity : Activity(), LocationListener {
     private lateinit var web: WebView
     private lateinit var gps: LocationManager
+    
+private var gpsRunning = false
+private var lastLocationAt = 0L
+private var ready = false
+
     private val handler = Handler(Looper.getMainLooper())
     private val batteryReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) { refreshBattery() }
