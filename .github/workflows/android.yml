@@ -1,21 +1,14 @@
 
-name: RC250 STORM V05 - APK
+name: Compilar RC250 Launcher
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
-    defaults:
-      run:
-        working-directory: RC250_STORM_V05_GITHUB
-
     steps:
-      - name: Descargar proyecto
+      - name: Descargar codigo
         uses: actions/checkout@v4
 
       - name: Instalar Java 17
@@ -25,29 +18,21 @@ jobs:
           java-version: '17'
 
       - name: Configurar Android
-        uses: android-actions/setup-android@v4
-        with:
-          packages: 'platform-tools'
+        uses: android-actions/setup-android@v3
 
-      - name: Instalar SDK
-        run: sdkmanager "platforms;android-35" "build-tools;35.0.0"
+      - name: Instalar Android 36
+        run: sdkmanager "platforms;android-36" "build-tools;35.0.0"
 
-      - name: Configurar Gradle
+      - name: Preparar Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
-          gradle-version: '8.9'
+          gradle-version: '8.11.1'
 
-      - name: Verificar tablero STORM
-        run: |
-          test -f app/src/main/assets/dashboard.jpg
-          test -f app/src/main/assets/index.html
-          grep -q 'stormv5' app/build.gradle.kts
-
-      - name: Compilar RC250 STORM V05
-        run: gradle :app:assembleDebug --no-daemon
+      - name: Compilar APK
+        run: gradle :app:assembleDebug --no-daemon --stacktrace
 
       - name: Guardar APK
         uses: actions/upload-artifact@v4
         with:
-          name: RC250-STORM-V05-APK
-          path: RC250_STORM_V05_GITHUB/app/build/outputs/apk/debug/app-debug.apk
+          name: RC250-Launcher-Beta-APK
+          path: app/build/outputs/apk/debug/app-debug.apk
